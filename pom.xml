@@ -21,9 +21,28 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.12</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.ProgrammerRabbit</groupId>
             <artifactId>rabbit-utils</artifactId>
             <version>${RABBIT-UTILS-CODE}</version>
+        </dependency>
+
+        <!-- to eliminate compile error -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.1</version>
         </dependency>
     </dependencies>
 
