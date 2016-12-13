@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <RABBIT-UTILS-CODE>-f3a6d3cd04-1</RABBIT-UTILS-CODE>
+        <RABBIT-UTILS-CODE>-b66cfe7b52-1</RABBIT-UTILS-CODE>
     </properties>
 
     <dependencies>
@@ -33,6 +33,7 @@
         </dependency>
 
         <!-- to eliminate compile error -->
+        <!--
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -44,6 +45,7 @@
             <artifactId>mybatis</artifactId>
             <version>3.4.1</version>
         </dependency>
+        -->
     </dependencies>
 
     <repositories>

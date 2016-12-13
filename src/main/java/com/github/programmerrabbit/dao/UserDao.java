@@ -1,6 +1,7 @@
 package com.github.programmerrabbit.dao;
 
 import com.github.programmerrabbit.entity.User;
+import com.github.programmerrabbit.test.Demo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -12,6 +13,7 @@ import java.util.List;
  * Author: ProgrammerRabbit
  * http://github.com/ProgrammerRabbit
  */
+@Demo
 public interface UserDao {
     void insert(@Param("entity") User entity);
 

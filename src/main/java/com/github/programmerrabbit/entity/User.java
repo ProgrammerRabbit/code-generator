@@ -2,12 +2,14 @@ package com.github.programmerrabbit.entity;
 
 import com.github.programmerrabbit.DaoCodeGenerator;
 import com.github.programmerrabbit.ProjectPath;
+import com.github.programmerrabbit.test.Demo;
 import lombok.Data;
 
 /**
  * Created by Rabbit on 2016/12/12.
  */
 @Data
+@Demo
 public class User {
     private String username;
     private String password;

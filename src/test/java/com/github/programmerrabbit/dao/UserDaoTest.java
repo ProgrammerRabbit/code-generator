@@ -1,6 +1,7 @@
 package com.github.programmerrabbit.dao;
 
 import com.github.programmerrabbit.entity.User;
+import com.github.programmerrabbit.test.Demo;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -12,6 +13,7 @@ import java.util.List;
  * http://github.com/ProgrammerRabbit
  */
 // TODO add spring4junit support
+@Demo
 public class UserDaoTest {
     @Resource
     private UserDao dao;
