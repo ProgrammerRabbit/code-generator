@@ -1,5 +1,6 @@
 package com.github.programmerrabbit;
 
+import com.github.programmerrabbit.test.Demo;
 import com.github.programmerrabbit.test.Test;
 import com.github.programmerrabbit.test.Tests;
 import com.github.programmerrabbit.utils.MapUtils;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * Created by Rabbit on 2016/12/12.
  */
+@Demo
 public class FreeMarkerDemo {
     @Test
     public void runDemo() throws IOException, TemplateException {

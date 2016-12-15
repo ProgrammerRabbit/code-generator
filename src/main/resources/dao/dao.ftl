@@ -18,7 +18,7 @@ public interface ${entityName}Dao {
     @Select("SELECT * FROM ${entityName} WHERE id = ${r'#{id}'}")
     ${entityName} getById(@Param("id") int id);
 
-    @Select("SELECT * FROM ${entityName} WHERE ${r'#{fieldName}'} = ${r'#{fieldValue}'}")
+    @Select("SELECT * FROM ${entityName} WHERE ${r'${fieldName}'} = ${r'#{fieldValue}'}")
     List<${entityName}> getByField(@Param("fieldName") String filedName, @Param("fieldValue") Object fieldValue);
 
     void updateById(@Param("id") int id, @Param("entity") ${entityName} entity);
