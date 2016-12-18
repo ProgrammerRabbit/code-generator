@@ -10,8 +10,6 @@ import java.io.*;
 import java.util.Map;
 
 /**
- * MyBatis Dao Code Generator
- *
  * Created by Rabbit on 2016/12/12.
  */
 public class DaoCodeGenerator {
