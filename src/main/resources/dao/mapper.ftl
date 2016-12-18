@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${daoPackage}.${entityName}Dao">
 
-    <insert id="insert" parameterType="${entityFullName}">
+    <insert id="insert" parameterType="${entityFullName}" useGeneratedKeys="true" keyProperty="entity.id">
         INSERT INTO ${entityName}
         (
         <#list entityFields as field>

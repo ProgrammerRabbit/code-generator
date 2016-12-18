@@ -23,6 +23,7 @@ public class ${entityName}DaoTest {
         ${entityName} entity = new ${entityName}();
         // TODO fill entity
         dao.insert(entity);
+        System.out.println(entity.getId());
     }
 
     @Test
