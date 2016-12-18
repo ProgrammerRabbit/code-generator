@@ -10,13 +10,13 @@
     <packaging>jar</packaging>
 
     <properties>
-        <RABBIT-UTILS-CODE>-b66cfe7b52-1</RABBIT-UTILS-CODE>
+        <RABBIT-UTILS-CODE>-df59abe3d8-1</RABBIT-UTILS-CODE>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.freemarker</groupId>
-            <artifactId>freemarker-gae</artifactId>
+            <artifactId>freemarker</artifactId>
             <version>2.3.25-incubating</version>
         </dependency>
 
