@@ -16,13 +16,14 @@ public class ${entityName}DaoTest {
     @Resource
     private ${entityName}Dao dao;
 
-    private final static int ID = 1; // TODO modify the value
+    private int ID;
 
     @Test
     public void insert() throws Exception {
         ${entityName} entity = new ${entityName}();
         // TODO fill entity
         dao.insert(entity);
+        this.ID = entity.getId();
         System.out.println(entity.getId());
     }
 
