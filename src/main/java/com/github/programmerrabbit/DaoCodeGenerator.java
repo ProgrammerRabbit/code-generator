@@ -15,30 +15,28 @@ import java.util.Map;
  * Created by Rabbit on 2016/12/12.
  */
 public class DaoCodeGenerator {
-    private final static String DAO_FTL_NAME = "dao.ftl";
-    private final static String DAO_TEST_FTL_NAME = "daoTest.ftl";
-    private final static String MAPPER_FTL_NAME = "mapper.ftl";
-
     private static Configuration configuration;
 
     private static Map<String, Object> map;
 
+    @Deprecated
     public static void generateDaoCode(Class clazz, ProjectPath projectPath) {
-        try {
-            init(clazz, projectPath);
-            generateDao(clazz, projectPath);
-            generateDaoTest(clazz, projectPath);
-            generateMapper(clazz, projectPath);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        generateDao(clazz, projectPath);
+        generateDaoTest(clazz, projectPath);
+        generateMapper(clazz, projectPath);
+    }
+
+    public static void generateCodeFromEntity(Class clazz, ProjectPath projectPath) {
+        generateDaoCode(clazz, projectPath);
+        generateDto(clazz, projectPath);
+        generateService(clazz, projectPath);
     }
 
     public static void generateDao(Class clazz, ProjectPath projectPath) {
         try {
             init(clazz, projectPath);
 
-            Template template = configuration.getTemplate(DAO_FTL_NAME);
+            Template template = configuration.getTemplate(DaoFtlEnum.DAO_FTL.getFileName());
 
             // e.g. src/main/java/com/github/programmerrabbit/dao
             String filePath = projectPath.getMainJavaPath() + String.valueOf(map.get("daoPackage")).replace('.', '/');
@@ -56,7 +54,7 @@ public class DaoCodeGenerator {
         try {
             init(clazz, projectPath);
 
-            Template template = configuration.getTemplate(DAO_TEST_FTL_NAME);
+            Template template = configuration.getTemplate(DaoFtlEnum.DAO_TEST_FTL.getFileName());
 
             // e.g. src/test/java/com/github/programmerrabbit/dao
             String filePath = projectPath.getTestJavaPath() + String.valueOf(map.get("daoPackage")).replace(".", "/");
@@ -74,7 +72,7 @@ public class DaoCodeGenerator {
         try {
             init(clazz, projectPath);
 
-            Template template = configuration.getTemplate(MAPPER_FTL_NAME);
+            Template template = configuration.getTemplate(DaoFtlEnum.MAPPER_FTL.getFileName());
 
             // e.g. src/main/resources/mybatis/
             String filePath = projectPath.getMainResourcesPath() + projectPath.getMyBatisConfigPath();
@@ -88,6 +86,52 @@ public class DaoCodeGenerator {
         }
     }
 
+    public static void generateDto(Class clazz, ProjectPath projectPath) {
+        try {
+            init(clazz, projectPath);
+
+            Template template = configuration.getTemplate(DaoFtlEnum.DTO_FTL.getFileName());
+
+            // e.g. src/main/java/com/github/programmerrabbit/dto
+            String filePath = projectPath.getMainJavaPath() + String.valueOf(map.get("dtoPackage")).replace('.', '/');
+            new File(filePath).mkdirs();
+
+            // e.g. src/main/java/com/github/programmerrabbit/dto/UserDto.java
+            File file = new File(filePath + "/" + map.get("entityName") + "Dto.java");
+            process(template, file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void generateService(Class clazz, ProjectPath projectPath) {
+        try {
+            init(clazz, projectPath);
+
+            Template serviceTemplate = configuration.getTemplate(DaoFtlEnum.SERVICE_FTL.getFileName());
+            Template serviceImplTemplate = configuration.getTemplate(DaoFtlEnum.SERVICE_IMPL_FTL.getFileName());
+
+            // e.g. src/main/java/com/github/programmerrabbit/service
+            String serviceFilePath = projectPath.getMainJavaPath() + String.valueOf(map.get("servicePackage")).replace('.', '/');
+            new File(serviceFilePath).mkdirs();
+
+            // e.g. src/main/java/com/github/programmerrabbit/service/impl/
+            String serviceImplFilePath = serviceFilePath + "/" + projectPath.getServiceImplPath();
+            new File(serviceImplFilePath).mkdirs();
+
+            // e.g. src/main/java/com/github/programmerrabibt/service/UserService.java
+            File serviceFile = new File(serviceFilePath + "/" + map.get("entityName") + "Service.java");
+            process(serviceTemplate, serviceFile);
+
+            // e.g. src/main/java/com/github/programmerrabbit/service/impl/UserServiceImpl.java
+            String upperCaseImplPath = String.valueOf(map.get("upperCaseImplPath"));
+            File serviceImplFile = new File(serviceImplFilePath + map.get("entityName") + "Service" + upperCaseImplPath + ".java");
+            process(serviceImplTemplate, serviceImplFile);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void init(Class clazz, ProjectPath projectPath) throws IOException {
         prepareMap(clazz, projectPath);
 
@@ -96,9 +140,9 @@ public class DaoCodeGenerator {
             // e.g. src/main/resources/temp/
             File tempPath = new File(projectPath.getMainResourcesPath() + projectPath.getFtlTempPath());
             tempPath.mkdirs();
-            copyFileFromJar2Temp(clazz, projectPath, DAO_FTL_NAME);
-            copyFileFromJar2Temp(clazz, projectPath, DAO_TEST_FTL_NAME);
-            copyFileFromJar2Temp(clazz, projectPath, MAPPER_FTL_NAME);
+            for (DaoFtlEnum daoFtlEnum : DaoFtlEnum.values()) {
+                copyFileFromJar2Temp(clazz, projectPath, daoFtlEnum.getFileName());
+            }
             configuration.setDirectoryForTemplateLoading(tempPath);
         }
     }
@@ -121,17 +165,55 @@ public class DaoCodeGenerator {
             // e.g. com.github.programmerrabbit.dao
             String daoRelativePath = projectPath.getDaoRelativePath();
             String daoPackage = entityPackage;
-            String[] paths = daoRelativePath.split("/");
-            for (String path : paths) {
-                if (!StringUtils.isNullOrEmpty(path)) {
-                    if ("..".equals(path)) {
+            String[] daoSubPaths = daoRelativePath.split("/");
+            for (String daoSubPath : daoSubPaths) {
+                if (!StringUtils.isNullOrEmpty(daoSubPath)) {
+                    if ("..".equals(daoSubPath)) {
                         daoPackage = daoPackage.substring(0, daoPackage.lastIndexOf("."));
                     } else {
-                        daoPackage = daoPackage + "." + path;
+                        daoPackage = daoPackage + "." + daoSubPath;
                     }
                 }
             }
             map.put("daoPackage", daoPackage);
+
+            // e.g. com.github.programmerribbit.dto
+            String dtoRelativePath = projectPath.getDtoRelativePath();
+            String dtoPackage = entityPackage;
+            String[] dtoSubPaths = dtoRelativePath.split("/");
+            for (String dtoSubPath : dtoSubPaths) {
+                if (!StringUtils.isNullOrEmpty(dtoSubPath)) {
+                    if ("..".equals(dtoSubPath)) {
+                        dtoPackage = dtoPackage.substring(0, dtoPackage.lastIndexOf("."));
+                    } else {
+                        dtoPackage = dtoPackage + "." + dtoSubPath;
+                    }
+                }
+            }
+            map.put("dtoPackage", dtoPackage);
+
+            // e.g. com.github.programmerrabbit.service
+            String serviceRelativePath = projectPath.getServiceRelativePath();
+            String servicePackage = entityPackage;
+            String[] serviceSubPaths = serviceRelativePath.split("/");
+            for (String serviceSubPath : serviceSubPaths) {
+                if (!StringUtils.isNullOrEmpty(serviceSubPath)) {
+                    if ("..".equals(serviceSubPath)) {
+                        servicePackage = servicePackage.substring(0, servicePackage.lastIndexOf("."));
+                    } else {
+                        servicePackage = servicePackage + "." + serviceSubPath;
+                    }
+                }
+            }
+            map.put("servicePackage", servicePackage);
+
+            // e.g. impl
+            String implPath = projectPath.getServiceImplPath().substring(0, projectPath.getServiceImplPath().length() - 1);
+            map.put("implPath", implPath);
+
+            // e.g. Impl
+            String upperCaseImplPath = implPath.substring(0, 1).toUpperCase() + implPath.substring(1);
+            map.put("upperCaseImplPath", upperCaseImplPath);
 
             map.put("entityFields", clazz.getDeclaredFields());
         }

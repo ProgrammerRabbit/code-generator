@@ -15,6 +15,6 @@ public class User {
     private String password;
 
     public static void main(String[] args) {
-        DaoCodeGenerator.generateDaoCode(User.class, ProjectPath.DEFAULT_PROJECT_PATH);
+        DaoCodeGenerator.generateCodeFromEntity(User.class, ProjectPath.DEFAULT_PROJECT_PATH);
     }
 }

@@ -13,8 +13,12 @@ public class ProjectPath {
     private String testResourcesPath = "src/test/resources/";
 
     private String myBatisConfigPath = "mybatis/";
-    private String daoRelativePath = "../dao";
     private String ftlTempPath = "temp/";
+
+    private String daoRelativePath = "../dao/";
+    private String dtoRelativePath = "../dto/";
+    private String serviceRelativePath = "../service/";
+    private String serviceImplPath = "impl/"; // under service package
 
     public final static ProjectPath DEFAULT_PROJECT_PATH = new ProjectPath();
 }
